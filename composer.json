@@ -1,0 +1,9 @@
+{
+  "name": "aman-tariq/portfolio-contact",
+  "description": "SMTP email endpoint for Aman Tariq's portfolio contact form",
+  "type": "project",
+  "require": {
+    "php": ">=7.4",
+    "phpmailer/phpmailer": "^6.9"
+  }
+}
