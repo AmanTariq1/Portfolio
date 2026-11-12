@@ -35,4 +35,4 @@ For local testing, start a PHP server from this folder with `php -S localhost:80
 
 ## GitHub Pages
 
-The workflow in `.github/workflows/pages.yml` publishes the portfolio as a static site. It copies the portfolio HTML to `index.html` and includes the certificate assets. GitHub Pages does not run PHP, so the contact form's `send-email.php` endpoint will not work on the Pages deployment. Use PHP-supported hosting for the site and email endpoint when you are ready to enable email delivery.
+The workflow in `.github/workflows/pages.yml` publishes `index.html` as a static site and includes the certificate assets. GitHub Pages does not run PHP, so the contact form's `send-email.php` endpoint will not work on the Pages deployment. Use PHP-supported hosting for the site and email endpoint when you are ready to enable email delivery.

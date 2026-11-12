@@ -31,7 +31,7 @@ jobs:
       - name: Prepare static site
         run: |
           mkdir -p public
-          cp "Aman Tariq _ Full Stack Engineer and AI Developer.html" public/index.html
+          cp index.html public/index.html
           cp -R assets public/assets
 
       - name: Upload Pages artifact
