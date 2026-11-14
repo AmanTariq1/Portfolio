@@ -1,38 +1,41 @@
-# Portfolio contact email setup
+﻿# Portfolio
 
-The contact form sends submissions to `amantariqa344@gmail.com` through the PHP endpoint `send-email.php`.
+Local source of truth for Aman Tariq's portfolio. Frontend is static (index.html) and can be hosted on GitHub Pages; contact form email is handled by a backend endpoint.
 
-## Requirements
+## Contact email (agent response recipient)
+- Recipient: mantariqa344@gmail.com (from CONTACT_TO, default in backend).
+- Agents should use this email for contact responses.
 
-- PHP 7.4 or newer
-- Composer
-- A working SMTP account
-- PHP hosting (the form will not send email when the HTML file is opened directly with `file://`)
+## Architecture
+- **Frontend:** static site (index.html, ssets/) — GitHub Pages/local.
+- **Backend:** Vercel serverless function pi/send-email.js (Node, nodemailer) for contact form delivery. send-email.php remains for PHP hosting compatibility.
 
-## Install
+## Environment files
+- .env.example — committed template (no secrets). Push this.
+- .env — local secrets/config only. **Never push** (gitignored).
 
-Run this in the `Portfolio` folder, then deploy the generated `vendor/` directory with the site:
+Required vars (set in Vercel Project → Settings → Environment Variables, or PHP host env):
+| Variable | Notes |
+| --- | --- |
+| SMTP_HOST | SMTP server |
+| SMTP_PORT | 587 default |
+| SMTP_USER | SMTP username |
+| SMTP_PASS | SMTP password/app password (secret) |
+| SMTP_ENCRYPTION | 	ls or ssl |
+| SMTP_FROM | Optional; defaults to SMTP_USER |
+| CONTACT_TO | Optional; defaults to mantariqa344@gmail.com |
+| ALLOWED_ORIGIN | Optional; comma-separated allowed frontend origins for CORS (e.g. GitHub Pages URL) |
 
-```sh
-composer install --no-dev --optimize-autoloader
-```
+## Deploy (GitHub frontend + Vercel backend)
+1. Push this project to GitHub (do not commit .env, endor/, 
+ode_modules/).
+2. GitHub Pages: workflow .github/workflows/pages.yml deploys static site on push to main.
+3. Vercel: import the same repo (or Portfolio project), set env vars above, deploy. Note API URL: https://<vercel-app>.vercel.app/api/send-email.
+4. Configure frontend endpoint: in index.html before the contact script, set window.CONTACT_ENDPOINT = 'https://<vercel-app>.vercel.app/api/send-email'; (or host-specific injection). On non-GitHub hosting it falls back to orm.action (send-email.php).
+5. Set ALLOWED_ORIGIN to your GitHub Pages origin if needed.
 
-Configure these environment variables in the hosting control panel or PHP-FPM environment. Do not put SMTP credentials in the HTML, JavaScript, or a public file.
-
-| Variable | Example | Notes |
-| --- | --- | --- |
-| `SMTP_HOST` | `smtp.example.com` | SMTP server hostname |
-| `SMTP_PORT` | `587` | Defaults to `587` |
-| `SMTP_ENCRYPTION` | `tls` | Use `tls` or `ssl`; defaults to `tls` |
-| `SMTP_USER` | `you@example.com` | SMTP username |
-| `SMTP_PASS` | `your-provider-app-password` | SMTP password or provider app password |
-| `SMTP_FROM` | `you@example.com` | Optional; defaults to `SMTP_USER` |
-| `CONTACT_TO` | `amantariqa344@gmail.com` | Optional recipient override |
-
-Use the email provider's app password where required. Keep credentials in the hosting provider's secret/environment settings, not in this project.
-
-For local testing, start a PHP server from this folder with `php -S localhost:8000` and open the portfolio HTML through `http://localhost:8000/`. SMTP environment variables and Composer dependencies must also be configured for delivery to work.
-
-## GitHub Pages
-
-The workflow in `.github/workflows/pages.yml` publishes `index.html` as a static site and includes the certificate assets. GitHub Pages does not run PHP, so the contact form's `send-email.php` endpoint will not work on the Pages deployment. Use PHP-supported hosting for the site and email endpoint when you are ready to enable email delivery.
+## Local
+- Frontend: open index.html or serve statically.
+- PHP backend: composer install + php -S localhost:8000 with env vars.
+- Vercel backend: 
+pm i and ercel dev with env vars.
